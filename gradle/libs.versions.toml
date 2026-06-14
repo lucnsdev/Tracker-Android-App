@@ -1,0 +1,14 @@
+[versions]
+agp = "9.2.1"
+playServices = "4.4.4"
+playServicesLocation = "21.3.0"
+playServicesMaps = "20.0.0"
+
+[libraries]
+play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
+play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMaps" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+google-play-services = { id = "com.google.gms.google-services", version.ref = "playServices" }
+

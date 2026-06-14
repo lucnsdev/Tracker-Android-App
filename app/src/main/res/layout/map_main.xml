@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <View
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/gradient_top" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/fragment_downer_background"
+        android:elevation="8dp">
+
+        <View
+            android:id="@+id/notch"
+            android:layout_width="64dp"
+            android:layout_height="8dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_4"
+            android:background="@drawable/notch" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/notch"
+            android:layout_marginTop="@dimen/margin_3"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="@dimen/margin_4">
+
+            <ImageButton
+                android:id="@+id/buttonMenu"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/fab"
+                android:elevation="4dp"
+                android:src="@drawable/icon_more_vertical" />
+
+            <ImageButton
+                android:id="@+id/fab"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_alignBottom="@+id/textVelocityValue"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="@dimen/margin"
+                android:background="@drawable/fab"
+                android:elevation="4dp"
+                android:enabled="false"
+                android:src="@drawable/location_disabled"
+                android:textColor="@color/main_dark" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/textPowerAt">
+
+                <TextView
+                    android:id="@+id/textStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/barlow_condensed_bold"
+                    android:text="@string/status"
+                    android:textColor="@color/main_dark"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/textStatusValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textStatus"
+                    android:layout_marginTop="4dp"
+                    android:fontFamily="@font/barlow_condensed_medium"
+                    android:singleLine="true"
+                    android:text="@string/not_specified"
+                    android:textColor="@color/gray_8"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/textActiveTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textStatusValue"
+                    android:layout_marginTop="30dp"
+                    android:fontFamily="@font/barlow_condensed_bold"
+                    android:text="@string/active_time"
+                    android:textColor="@color/main_dark"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/textActiveTimeValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textActiveTime"
+                    android:fontFamily="@font/barlow_condensed_light"
+                    android:singleLine="true"
+                    android:text="@string/not_specified"
+                    android:textColor="@color/gray_8"
+                    android:textSize="36sp" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/textAccuracy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textPowerAtValue"
+                android:layout_alignStart="@+id/textPowerAt"
+                android:layout_marginTop="@dimen/margin_3"
+                android:fontFamily="@font/barlow_condensed_bold"
+                android:text="@string/accuracy"
+                android:textColor="@color/main_dark"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/textAccuracyValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textAccuracy"
+                android:layout_alignStart="@+id/textPowerAt"
+                android:layout_toStartOf="@+id/textSatellitesHdop"
+                android:fontFamily="@font/barlow_condensed_light"
+                android:singleLine="true"
+                android:text="@string/not_specified"
+                android:textColor="@color/gray_8"
+                android:textSize="36sp" />
+
+            <TextView
+                android:id="@+id/textPowerAt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/barlow_condensed_bold"
+                android:text="@string/power_on_at"
+                android:textColor="@color/main_dark"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/textPowerAtValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textPowerAt"
+                android:layout_alignStart="@+id/textPowerAt"
+                android:fontFamily="@font/barlow_condensed_light"
+                android:text="@string/not_specified"
+                android:textColor="@color/gray_8"
+                android:textSize="36sp" />
+
+            <TextView
+                android:id="@+id/textSatellitesHdop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textPowerAtValue"
+                android:layout_alignParentEnd="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/margin_3"
+                android:fontFamily="@font/barlow_condensed_bold"
+                android:text="@string/satellites_hdop"
+                android:textColor="@color/main_dark"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/textSatellitesHdopValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textAccuracy"
+                android:layout_alignStart="@+id/textSatellitesHdop"
+                android:fontFamily="@font/barlow_condensed_light"
+                android:singleLine="true"
+                android:text="@string/not_specified"
+                android:textColor="@color/gray_8"
+                android:textSize="36sp" />
+
+            <TextView
+                android:id="@+id/textVelocity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textAccuracyValue"
+                android:layout_marginTop="@dimen/margin_3"
+                android:fontFamily="@font/barlow_condensed_bold"
+                android:text="@string/velocity"
+                android:textColor="@color/main_dark"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/textVelocityValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textVelocity"
+                android:fontFamily="@font/barlow_condensed_bold"
+                android:text="@string/velocity_zero"
+                android:textColor="@color/gray_6"
+                android:textSize="64sp" />
+        </RelativeLayout>
+    </RelativeLayout>
+</RelativeLayout>

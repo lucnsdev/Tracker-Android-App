@@ -1,0 +1,52 @@
+<resources>
+    <string name="app_name">Tracker</string>
+    <string name="notification_alert">Alert</string>
+    <string name="notification_silent">Silent</string>
+    <string name="alert">ALERT!!!</string>
+    <string name="send_test">Send a test</string>
+    <string name="format_ago">%d%s ago.</string>
+    <string name="format_ago_days_hours">%dd, %dh ago.</string>
+
+    <string name="ble_options">BLE options</string>
+    <string name="scanning">Scanning&#8230;</string>
+    <string name="scanned_devices">Scanned devices</string>
+    <string name="already_scanning">Already scanning&#8230;</string>
+    <string name="choose_device">Choose a devices</string>
+    <string name="connecting">Connecting&#8230;</string>
+    <string name="send">Send</string>
+    <string name="send_data">Send data</string>
+    <string name="discovering_services">Discovering services&#8230;</string>
+    <string name="disconnected">Disconnected</string>
+    <string name="discovering_services_failure">Discovering services failure</string>
+    <string name="sent">Sent</string>
+    <string name="canceled">Canceled</string>
+    <string name="no_devices_found">No devices found.</string>
+
+    <string name="captured_at">Captured at</string>
+    <string name="accuracy">Accuracy</string>
+    <string name="active_time">Active time</string>
+    <string name="not_specified">Not specified</string>
+    <string name="status">Status</string>
+    <string name="status_power_up">Turned on</string>
+    <string name="status_power_down">Turned off</string>
+    <string name="status_power_down_home">Turned off in home</string>
+    <string name="status_power_down_waiting_accuracy">Off. Waiting best accuracy&#8230;</string>
+    <string name="status_power_down_no_connection">Off. No connection!</string>
+    <string name="status_power_down_no_accuracy">Off. No accuracy!</string>
+    <string name="status_empty_data">Empty data on server</string>
+    <string name="status_internal_read_failure">Internal read failure!</string>
+    <string name="power_on_at">Power on at</string>
+    <string name="power_off_at">Power off at</string>
+    <string name="velocity">Velocity</string>
+    <string name="velocity_zero">0km/h</string>
+    <string name="satellites_hdop">Satellites/HDOP</string>
+    <string name="enable_monitor">Enable monitor</string>
+    <string name="disable_monitor">Disable monitor</string>
+    <string name="monitor_enabled">Monitor enabled</string>
+    <string name="monitor_disabled">Monitor disabled</string>
+    <string name="monitor_close">Close Monitor</string>
+    <string name="fix">Fix</string>
+    <string name="no_fix">No fix</string>
+
+    <string name="error_no_internet_connection">No internet connection!</string>
+</resources>
