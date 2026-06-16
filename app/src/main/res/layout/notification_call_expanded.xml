@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/icon_dangerous" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/margin"
+            android:text="@string/possible_violation"
+            android:textColor="@android:color/white"
+            android:fontFamily="@font/bold"
+            android:textSize="24sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_3"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/buttonIgnore"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginEnd="@dimen/margin"
+            android:layout_weight="1"
+            android:background="@drawable/button_red_background"
+            android:text="@string/ignore"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/buttonOpenApp"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginStart="@dimen/margin"
+            android:layout_weight="1"
+            android:background="@drawable/button_white_background"
+            android:text="@string/open_app"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+</LinearLayout>

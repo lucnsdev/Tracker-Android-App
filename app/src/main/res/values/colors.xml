@@ -30,4 +30,15 @@
     <color name="red">#FF3950</color>
     <color name="orange">#FFA200</color>
     <color name="green">#30C77D</color>
+
+    <color name="incoming_start">#AD2665</color>
+    <color name="incoming_center">#9B3838</color>
+    <color name="incoming_end">#924736</color>
+
+    <color name="button_red">#97243A</color>
+    <color name="button_red_border">#FF3E64</color>
+
+    <color name="translucent">#80FFFFFF</color>
+    <color name="item_red_border">#A22C43</color>
+    <color name="item_red">#52212B</color>
 </resources>

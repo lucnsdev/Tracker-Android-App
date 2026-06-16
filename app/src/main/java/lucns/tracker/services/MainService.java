@@ -1,12 +1,16 @@
 package lucns.tracker.services;
 
+import android.app.KeyguardManager;
 import android.content.Intent;
+import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.Log;
 
 import lucns.tracker.R;
 import lucns.tracker.activities.MapActivity;
 import lucns.tracker.mqtt.MqttClient;
+import lucns.tracker.notifications.NotificationProvider;
+import lucns.tracker.remote.FloatAlert;
 import lucns.tracker.utils.Utils;
 
 public class MainService extends BaseService {
@@ -14,7 +18,9 @@ public class MainService extends BaseService {
     public interface Callback {
 
         void onReceive(String data);
+
         void onConnected();
+
         void onSubscribed();
     }
 
@@ -24,6 +30,7 @@ public class MainService extends BaseService {
     private final String DEFAULT_TOPIC = "lucns/tracker/data";
     private boolean disconnectByUser;
     private boolean isMonitoring;
+    private FloatAlert floatAlert;
 
     public void setCallback(Callback callback) {
         this.callback = callback;
@@ -40,14 +47,9 @@ public class MainService extends BaseService {
     @Override
     public void onCreate() {
         super.onCreate();
-        notification = new NotificationProvider(this, new NotificationProvider.Callback() {
-            @Override
-            public void onButtonClick() {
-                disconnectByUser = true;
-                mqtt.disconnect();
-                stopForeground();
-            }
-        });
+
+        floatAlert = new FloatAlert(this, this);
+        notification = new NotificationProvider(this);
         notification.setActivityClass(MapActivity.class);
 
         mqtt = MqttClient.getInstance();
@@ -56,15 +58,15 @@ public class MainService extends BaseService {
             @Override
             public void onBrokerConnectionChanged(boolean isConnected) {
                 Log.d("Lucas", "onBrokerConnectionChanged " + isConnected);
-                if (disconnectByUser) return;
                 if (isConnected) mqtt.subscribe(DEFAULT_TOPIC);
-                else if (Utils.hasInternetConnection()) connect();
+                else if (Utils.hasInternetConnection() && !disconnectByUser) connect();
             }
 
             @Override
             public void onSubscribeChanged(boolean isSubscribed) {
                 Log.d("Lucas", "onSubscribeChanged " + isSubscribed);
-                if (isForeground()) {} else {
+                if (isForeground()) {
+                } else {
                     callback.onSubscribed();
                 }
             }
@@ -76,7 +78,18 @@ public class MainService extends BaseService {
             @Override
             public void onReceive(String topic, String publication) {
                 Log.i("Lucas", "Received: " + publication);
-                if (isForeground()) {} else {
+                if (isForeground()) {
+                    KeyguardManager keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
+                    if (keyguardManager.isKeyguardLocked()) {
+                        Log.d("lucas", "isKeyguardLocked");
+                        notification.showAlert(getString(R.string.possible_violation));
+                    } else {
+                        Log.d("lucas", "startActivity");
+                        Intent intent = new Intent(MainService.this, MapActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        startActivity(intent);
+                    }
+                } else {
                     callback.onReceive(publication);
                 }
             }
@@ -120,8 +133,9 @@ public class MainService extends BaseService {
     }
 
     public void stopForeground() {
+        disconnectByUser = true;
+        mqtt.disconnect();
         super.stopForeground();
-        notification.unregister();
     }
 
     public void send(String message) {
@@ -129,6 +143,7 @@ public class MainService extends BaseService {
     }
 
     public void connect() {
+        disconnectByUser = false;
         if (mqtt.isConnected()) return;
         mqtt.connect("broker.emqx.io:1883");
     }

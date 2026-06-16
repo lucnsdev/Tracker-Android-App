@@ -11,6 +11,9 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.FULL_SCREEN_INTENT" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
@@ -27,7 +30,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="${mapsApiKey}"/>
+            android:value="${mapsApiKey}" />
 
         <activity
             android:name=".activities.PermissionActivity"
@@ -47,11 +50,20 @@
             android:name=".activities.BleOptionsActivity"
             android:enabled="true" />
 
+        <activity
+            android:name=".activities.IncomingCallActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
+            android:showOnLockScreen="true"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true" />
+
         <service
             android:name=".services.MainService"
-            android:foregroundServiceType="dataSync"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
 
+        <receiver android:name=".notifications.IncomingCallReceiver" />
     </application>
 </manifest>

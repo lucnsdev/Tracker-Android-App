@@ -2,8 +2,11 @@ package lucns.tracker.services;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.pm.ServiceInfo;
 import android.os.Binder;
 import android.os.IBinder;
+
+import lucns.tracker.notifications.NotificationProvider;
 
 public abstract class BaseService extends Service {
 
@@ -54,7 +57,7 @@ public abstract class BaseService extends Service {
                 case START_FOREGROUND:
                     isForeground = true;
                     NotificationProvider notification = onForegroundRequested();
-                    startForeground(notification.getNotificationCode(), notification.getNotification());
+                    startForeground(notification.getNotificationCode(), notification.getNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC);
                     onForegroundStarted();
                     break;
                 case STOP_FOREGROUND:

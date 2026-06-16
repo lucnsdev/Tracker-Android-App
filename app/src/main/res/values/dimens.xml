@@ -9,4 +9,8 @@
 
     <dimen name="elevation">4dp</dimen>
     <dimen name="dialog_width">300dp</dimen>
+
+    <dimen name="radius_major">24dp</dimen>
+    <dimen name="radius_minor">16dp</dimen>
+    <dimen name="border">1dp</dimen>
 </resources>

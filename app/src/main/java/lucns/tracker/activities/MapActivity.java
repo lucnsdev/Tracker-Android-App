@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -307,6 +306,7 @@ public class MapActivity extends Activity {
                     } else {
                         mainService.setMonitorMode(true);
                         Notify.showToast(R.string.monitor_enabled);
+                        finish();
                     }
                 } else if (itemId == R.id.menu_ble_options) {
                     BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
@@ -347,12 +347,12 @@ public class MapActivity extends Activity {
 
                     @Override
                     public void onConnected() {
-
+                        Notify.showToast(R.string.connected);
                     }
 
                     @Override
                     public void onSubscribed() {
-
+                        Notify.showToast(R.string.subscribed);
                     }
                 });
                 if (Utils.hasInternetConnection()) mainService.connect();
@@ -360,6 +360,10 @@ public class MapActivity extends Activity {
             }
         });
         loadLastInformation();
+        if (information != null) {
+            LocationData location = information.getLocationData();
+            if (location != null) location.isOlder = true;
+        }
 
         getOnBackInvokedDispatcher().registerOnBackInvokedCallback(OnBackInvokedDispatcher.PRIORITY_DEFAULT, onBackPressedListener);
     }
@@ -448,6 +452,7 @@ public class MapActivity extends Activity {
                 } else {
                     locationData = LocationData.from(information.getLocationData());
                     locationData.satellites = jsonLocation.getInt("satellites");
+                    locationData.gnssFix = jsonLocation.getBoolean("gnss_fix");
                 }
             }
             if (information != null) {
@@ -483,8 +488,14 @@ public class MapActivity extends Activity {
         Annotator annotator = new Annotator("LastInformation.json");
         LocationData location = information.getLocationData();
         try {
-            JSONObject jsonLocation = new JSONObject();
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("status", information.status);
+            jsonObject.put("velocity", information.velocity);
+            jsonObject.put("active_time", information.getActiveTime());
+            if (information.status == Information.POWER_UP) jsonObject.put("power_on_at", information.getPowerOnAt());
+            else jsonObject.put("power_off_at", information.getPowerOffAt());
             if (location != null) {
+                JSONObject jsonLocation = new JSONObject();
                 if (location.latitude != 0) jsonLocation.put("latitude", location.latitude);
                 if (location.longitude != 0) jsonLocation.put("longitude", location.longitude);
                 if (location.accuracy != 0) jsonLocation.put("accuracy", location.accuracy);
@@ -492,15 +503,8 @@ public class MapActivity extends Activity {
                 jsonLocation.put("azimuth", location.azimuth);
                 jsonLocation.put("satellites", location.satellites);
                 jsonLocation.put("captured_at", location.capturedAt);
+                jsonObject.put("location", jsonLocation);
             }
-
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("status", information.status);
-            jsonObject.put("velocity", information.velocity);
-            jsonObject.put("active_time", information.getActiveTime());
-            if (information.status == Information.POWER_UP) jsonObject.put("power_on_at", information.getPowerOnAt());
-            else jsonObject.put("power_off_at", information.getPowerOffAt());
-            jsonObject.put("location", jsonLocation);
             annotator.setContent(jsonObject.toString(4));
         } catch (JSONException e) {
             e.printStackTrace();

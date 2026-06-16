@@ -85,7 +85,7 @@ public class MqttClient {
     }
 
     public void connect(String broker) {
-        if (isConnected()) return;
+        if (isConnected() || isConnecting) return;
         isConnecting = true;
         lastBroker = broker;
         new Thread(new Runnable() {

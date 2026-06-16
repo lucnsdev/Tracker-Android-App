@@ -2,10 +2,18 @@
     <string name="app_name">Tracker</string>
     <string name="notification_alert">Alert</string>
     <string name="notification_silent">Silent</string>
+    <string name="notification_fullscreen">Full Screen</string>
     <string name="alert">ALERT!!!</string>
     <string name="send_test">Send a test</string>
     <string name="format_ago">%d%s ago.</string>
     <string name="format_ago_days_hours">%dd, %dh ago.</string>
+    <string name="close">Close</string>
+    <string name="violation">Violation</string>
+    <string name="possible_violation">Possible violation running&#8230;</string>
+    <string name="ignore">Ignore</string>
+    <string name="open_app">Open app</string>
+    <string name="connected">Connected.</string>
+    <string name="subscribed">Subscribed.</string>
 
     <string name="ble_options">BLE options</string>
     <string name="scanning">Scanning&#8230;</string>
