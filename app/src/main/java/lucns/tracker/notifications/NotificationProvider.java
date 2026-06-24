@@ -24,8 +24,6 @@ public class NotificationProvider {
     private final String alert = "Alert";
     public static final String ACTION_BUTTON_CLICK = "button_click";
     public static final String ACTION_DELETE = "delete";
-    public static final String ACTION_OPEN = "open_app";
-    public static final String ACTION_IGNORE = "ignore";
     private final Context context;
     private final NotificationManager notificationManager;
     private Notification notification;
@@ -90,18 +88,14 @@ public class NotificationProvider {
         Intent intentFullScreen = new Intent(context, IncomingCallActivity.class);
         PendingIntent pendingIntentFullScreen = PendingIntent.getActivity(context, 0, intentFullScreen, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
-        Intent intentIgnore = new Intent(context, IncomingCallReceiver.class);
-        intentIgnore.setAction(ACTION_IGNORE);
-        PendingIntent pendingIntentIgnore = PendingIntent.getBroadcast(context, 1, intentIgnore, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-
-        Intent intentOpen = new Intent(context, IncomingCallReceiver.class);
-        intentOpen.setAction(ACTION_OPEN);
-        PendingIntent pendingIntentOpen = PendingIntent.getBroadcast(context, 2, intentOpen, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        Intent intentButton = new Intent(context, IncomingCallReceiver.class);
+        intentButton.setAction(ACTION_BUTTON_CLICK);
+        PendingIntent pendingIntentButton = PendingIntent.getBroadcast(context, 1, intentButton, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         RemoteViews collapsedView = new RemoteViews(context.getPackageName(), R.layout.notification_call_collapsed);
         RemoteViews expandedView = new RemoteViews(context.getPackageName(), R.layout.notification_call_expanded);
-        expandedView.setOnClickPendingIntent(R.id.buttonIgnore, pendingIntentIgnore);
-        expandedView.setOnClickPendingIntent(R.id.buttonOpenApp, pendingIntentOpen);
+        expandedView.setOnClickPendingIntent(R.id.buttonIgnore, pendingIntentButton);
+        expandedView.setOnClickPendingIntent(R.id.buttonOpenApp, pendingIntent);
 
         Notification.Builder builder = new Notification.Builder(context, alert);
         builder.setAutoCancel(false);
@@ -151,8 +145,10 @@ public class NotificationProvider {
         if (sub != null) builder.setSubText(sub);
         if (pendingIntent != null) builder.setContentIntent(pendingIntent);
         if (action != null) {
-            pendingIntent = PendingIntent.getBroadcast(context, NOTIFICATION_CODE, new Intent(ACTION_BUTTON_CLICK), PendingIntent.FLAG_IMMUTABLE);
-            builder.addAction(new Notification.Action.Builder(Icon.createWithResource(context, R.drawable.icon_close_18), action, pendingIntent).build());
+            Intent intentButton = new Intent(context, IncomingCallReceiver.class);
+            intentButton.setAction(ACTION_BUTTON_CLICK);
+            PendingIntent pendingIntentButton = PendingIntent.getBroadcast(context, 1, intentButton, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+            builder.addAction(new Notification.Action.Builder(Icon.createWithResource(context, R.drawable.icon_close_18), action, pendingIntentButton).build());
         }
         builder.setSmallIcon(Icon.createWithResource(context, R.drawable.icon_notification_18));
         builder.setCategory(Notification.CATEGORY_SERVICE);

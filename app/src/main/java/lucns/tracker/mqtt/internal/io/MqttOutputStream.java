@@ -1,7 +1,5 @@
 package lucns.tracker.mqtt.internal.io;
 
-import android.util.Log;
-
 import lucns.tracker.mqtt.internal.messages.MqttMessage;
 
 import java.io.BufferedOutputStream;
@@ -39,7 +37,6 @@ public class MqttOutputStream {
     public void write(MqttMessage message) throws IOException {
         out.write(message.getHeader());
         out.write(message.getPayload());
-
 
         //if (message.getType() != MqttMessage.MESSAGE_TYPE_SUBSCRIBE) return;
         /*

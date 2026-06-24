@@ -1,7 +1,5 @@
 package lucns.tracker.mqtt.internal.io;
 
-import android.util.Log;
-
 import lucns.tracker.mqtt.internal.messages.MqttMessage;
 
 import java.io.ByteArrayOutputStream;
@@ -35,7 +33,6 @@ public class MqttInputStream {
         ByteArrayOutputStream bais = new ByteArrayOutputStream();
         byte first = in.readByte();
         byte type = (byte) ((first >>> 4) & 0x0F);
-        // Log.d("lucas", "mosquito sample received:" + type);
         if ((type < MqttMessage.MESSAGE_TYPE_CONNECT) || (type > MqttMessage.MESSAGE_TYPE_DISCONNECT)) {
             throw new InvalidParameterException("Invalid type message!");
         }
@@ -50,7 +47,7 @@ public class MqttInputStream {
         return new MqttMessage.Creator().getMessage(packet);
     }
 
-    private void readFully(byte b[], int off, int len) throws IOException {
+    private void readFully(byte[] b, int off, int len) throws IOException {
         if (len < 0) throw new IndexOutOfBoundsException();
         int n = 0;
         while (n < len) {

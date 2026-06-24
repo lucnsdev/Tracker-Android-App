@@ -274,11 +274,11 @@ public class MqttClient {
     }
 
     public void publish(String topic, String publication) {
-        publish(topic, publication, false);
+        publish(topic, publication, false, 1);
     }
 
-    public void publish(String topic, String publication, boolean retained) {
-        publish(new MqttPublishMessage(topic, publication, retained));
+    public void publish(String topic, String publication, boolean retained, int qos) {
+        publish(new MqttPublishMessage(topic, publication, retained, qos));
     }
 
     public void publish(MqttMessage mqttMessage) {
@@ -286,12 +286,13 @@ public class MqttClient {
         MqttPublishMessage publishMessage = (MqttPublishMessage) mqttMessage;
         if (publishMessage.getQos() > 0) {
             currentMessageId++;
+            if (currentMessageId > 65535) currentMessageId = 0;
             publishMessage.setMessageId(currentMessageId);
         }
         dataWriter.put(publishMessage);
     }
 
     public void deleteRetained(String topic) {
-        publish(new MqttPublishMessage(topic, new byte[0], true));
+        publish(new MqttPublishMessage(topic, new byte[0], true, 0));
     }
 }

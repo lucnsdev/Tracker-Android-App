@@ -14,25 +14,25 @@
         android:layout_height="48dp"
         android:background="@drawable/gradient_top" />
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@drawable/fragment_downer_background"
-        android:elevation="8dp">
+        android:elevation="8dp"
+        android:orientation="vertical">
 
         <View
             android:id="@+id/notch"
             android:layout_width="64dp"
             android:layout_height="8dp"
-            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
             android:layout_marginTop="@dimen/margin_4"
             android:background="@drawable/notch" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/notch"
             android:layout_marginTop="@dimen/margin_3"
             android:paddingStart="24dp"
             android:paddingEnd="24dp"
@@ -65,10 +65,34 @@
                 android:layout_height="wrap_content"
                 android:layout_toStartOf="@+id/textPowerAt">
 
+                <LinearLayout
+                    android:id="@+id/rootConnection"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/barlow_condensed_bold"
+                        android:text="@string/connection"
+                        android:textColor="@color/gray_12"
+                        android:textSize="20sp" />
+
+                    <lucns.tracker.views.LedView
+                        android:id="@+id/ledConnection"
+                        android:layout_width="8dp"
+                        android:layout_height="8dp"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="@dimen/margin" />
+                </LinearLayout>
+
                 <TextView
                     android:id="@+id/textStatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/rootConnection"
+                    android:layout_marginTop="@dimen/margin_2"
                     android:fontFamily="@font/barlow_condensed_bold"
                     android:text="@string/status"
                     android:textColor="@color/main_dark"
@@ -135,13 +159,38 @@
                 android:textColor="@color/gray_8"
                 android:textSize="36sp" />
 
+            <LinearLayout
+                android:id="@+id/rootCentralStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/textPowerAt"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/barlow_condensed_bold"
+                    android:text="@string/central"
+                    android:textColor="@color/gray_12"
+                    android:textSize="20sp" />
+
+                <lucns.tracker.views.LedView
+                    android:id="@+id/ledCentral"
+                    android:layout_width="8dp"
+                    android:layout_height="8dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/margin" />
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/textPowerAt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/rootCentralStatus"
                 android:layout_centerHorizontal="true"
                 android:fontFamily="@font/barlow_condensed_bold"
                 android:text="@string/power_on_at"
+                android:layout_marginTop="@dimen/margin_2"
                 android:textColor="@color/main_dark"
                 android:textSize="20sp" />
 
@@ -202,5 +251,5 @@
                 android:textColor="@color/gray_6"
                 android:textSize="64sp" />
         </RelativeLayout>
-    </RelativeLayout>
+    </LinearLayout>
 </RelativeLayout>

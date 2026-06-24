@@ -55,6 +55,9 @@
     <string name="monitor_close">Close Monitor</string>
     <string name="fix">Fix</string>
     <string name="no_fix">No fix</string>
+    <string name="central">Central</string>
+    <string name="connection">Connection</string>
+    <string name="updated_from_central">Updated from central.</string>
 
     <string name="error_no_internet_connection">No internet connection!</string>
 </resources>

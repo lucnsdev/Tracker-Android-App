@@ -2,10 +2,8 @@ package lucns.tracker.mqtt.internal.io;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 
 import lucns.tracker.mqtt.internal.TcpNetwork;
-import lucns.tracker.mqtt.internal.messages.MqttConnectMessage;
 import lucns.tracker.mqtt.internal.messages.MqttMessage;
 
 import java.io.IOException;
@@ -53,7 +51,7 @@ public class DataWriter {
             public void run() {
                 boolean isBrokenPipe = false;
                 while (isRunning()) {
-                    while (queue.size() > 0) {
+                    while (!queue.isEmpty()) {
                         try {
                             write(queue.remove());
                         } catch (IOException e) {

@@ -17,7 +17,7 @@ public class MainService extends BaseService {
 
     public interface Callback {
 
-        void onReceive(String data);
+        void onReceive(String topic, String publication);
 
         void onConnected();
 
@@ -27,10 +27,13 @@ public class MainService extends BaseService {
     private Callback callback;
     private NotificationProvider notification;
     private MqttClient mqtt;
-    private final String DEFAULT_TOPIC = "lucns/tracker/data";
+    private final String TOPIC_REMOTE_DEVICE = "lucns/tracker/remote";
+    private final String TOPIC_CENTRAL_DEVICE = "lucns/tracker/central";
+    private final String TOPIC_MOBILE = "lucns/tracker/mobile";
     private boolean disconnectByUser;
     private boolean isMonitoring;
     private FloatAlert floatAlert;
+    private boolean subscribed, subscribed2;
 
     public void setCallback(Callback callback) {
         this.callback = callback;
@@ -58,16 +61,26 @@ public class MainService extends BaseService {
             @Override
             public void onBrokerConnectionChanged(boolean isConnected) {
                 Log.d("Lucas", "onBrokerConnectionChanged " + isConnected);
-                if (isConnected) mqtt.subscribe(DEFAULT_TOPIC);
+                subscribed = false;
+                subscribed2 = false;
+                if (isConnected) mqtt.subscribe(TOPIC_REMOTE_DEVICE);
                 else if (Utils.hasInternetConnection() && !disconnectByUser) connect();
             }
 
             @Override
             public void onSubscribeChanged(boolean isSubscribed) {
                 Log.d("Lucas", "onSubscribeChanged " + isSubscribed);
-                if (isForeground()) {
-                } else {
-                    callback.onSubscribed();
+                if (!subscribed) {
+                    subscribed = isSubscribed;
+                    if (isSubscribed) mqtt.subscribe(TOPIC_CENTRAL_DEVICE);
+                } else if (!subscribed2) {
+                    subscribed2 = isSubscribed;
+                }
+                if (subscribed && subscribed2) {
+                    if (isForeground()) {
+                    } else {
+                        callback.onSubscribed();
+                    }
                 }
             }
 
@@ -77,20 +90,17 @@ public class MainService extends BaseService {
 
             @Override
             public void onReceive(String topic, String publication) {
-                Log.i("Lucas", "Received: " + publication);
                 if (isForeground()) {
                     KeyguardManager keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
                     if (keyguardManager.isKeyguardLocked()) {
-                        Log.d("lucas", "isKeyguardLocked");
                         notification.showAlert(getString(R.string.possible_violation));
                     } else {
-                        Log.d("lucas", "startActivity");
                         Intent intent = new Intent(MainService.this, MapActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         startActivity(intent);
                     }
                 } else {
-                    callback.onReceive(publication);
+                    callback.onReceive(topic, publication);
                 }
             }
 
@@ -139,7 +149,7 @@ public class MainService extends BaseService {
     }
 
     public void send(String message) {
-        mqtt.publish(DEFAULT_TOPIC, message);
+        mqtt.publish(TOPIC_MOBILE, message);
     }
 
     public void connect() {

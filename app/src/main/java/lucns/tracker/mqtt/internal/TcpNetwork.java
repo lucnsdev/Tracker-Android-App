@@ -1,7 +1,5 @@
 package lucns.tracker.mqtt.internal;
 
-import android.util.Log;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -36,7 +34,7 @@ public class TcpNetwork {
         SocketAddress socketAddress = new InetSocketAddress(host, port);
         SocketFactory factory = SocketFactory.getDefault();
         socket = factory.createSocket();
-        socket.connect(socketAddress, 30 * 1000);
+        socket.connect(socketAddress, 10 * 1000);
         inputStream = socket.getInputStream();
         outputStream = socket.getOutputStream();
     }

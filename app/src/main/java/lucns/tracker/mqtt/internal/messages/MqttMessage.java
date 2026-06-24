@@ -103,7 +103,7 @@ public abstract class MqttMessage {
             byte digit = (byte) (no % 128);
             no = no / 128;
             if (no > 0) {
-                digit |= 0x80;
+                digit |= (byte) 0x80;
             }
             bos.write(digit);
             numBytes++;

@@ -2,9 +2,7 @@ package lucns.tracker.mqtt.internal.io;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 
-import lucns.tracker.R;
 import lucns.tracker.mqtt.internal.TcpNetwork;
 import lucns.tracker.mqtt.internal.messages.MqttMessage;
 

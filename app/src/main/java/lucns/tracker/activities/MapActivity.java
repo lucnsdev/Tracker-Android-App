@@ -45,9 +45,11 @@ import lucns.tracker.R;
 import lucns.tracker.services.MainService;
 import lucns.tracker.services.ServiceController;
 import lucns.tracker.utils.Annotator;
+import lucns.tracker.utils.NetworkConnectionListener;
 import lucns.tracker.utils.Notify;
 import lucns.tracker.utils.TimerCounter;
 import lucns.tracker.utils.Utils;
+import lucns.tracker.views.LedView;
 
 public class MapActivity extends Activity {
 
@@ -64,6 +66,8 @@ public class MapActivity extends Activity {
     private Information information;
     private boolean isBlackMarker;
     private Dialog dialog;
+    private LedView ledConnection, ledCentral;
+    private NetworkConnectionListener networkConnectionListener;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final Runnable runnable = new Runnable() {
 
@@ -182,6 +186,25 @@ public class MapActivity extends Activity {
         textActiveTime = findViewById(R.id.textActiveTimeValue);
         textVelocity = findViewById(R.id.textVelocityValue);
         textSatellitesHdop = findViewById(R.id.textSatellitesHdopValue);
+        ledConnection = findViewById(R.id.ledConnection);
+        ledCentral = findViewById(R.id.ledCentral);
+
+        networkConnectionListener = new NetworkConnectionListener(this, new NetworkConnectionListener.ConnectionCallback() {
+            @Override
+            public void onAvailable() {
+                Notify.showToast(R.string.connecting);
+                ledConnection.setColor(getColor(R.color.green));
+                ledCentral.setColor(getColor(R.color.orange));
+                if (mainService != null) mainService.connect();
+            }
+
+            @Override
+            public void onLost() {
+                Notify.showToast(R.string.error_no_internet_connection);
+                ledConnection.setColor(getColor(R.color.red));
+                ledCentral.setColor(getColor(R.color.red));
+            }
+        });
 
         timerCapturedAt = new TimerCounter(new TimerCounter.Callback() {
             @Override
@@ -335,9 +358,17 @@ public class MapActivity extends Activity {
                 mainService.stopForeground();
                 mainService.setCallback(new MainService.Callback() {
                     @Override
-                    public void onReceive(String data) {
+                    public void onReceive(String topic, String publication) {
+                        Log.d("Lucas", "From: " + topic + " Received: " + publication);
+                        Utils.vibrate();
                         try {
-                            retrieveData(data);
+                            JSONObject jsonObject = new JSONObject(publication);
+                            if (jsonObject.getString("device").equals("central")) {
+                                ledCentral.setColor(getColor(R.color.green));
+                                Notify.showToast(R.string.updated_from_central);
+                                if (jsonObject.length() == 1) return;
+                            }
+                            retrieveData(jsonObject);
                             saveLastInformation();
                             updateUi();
                         } catch (JSONException e) {
@@ -348,15 +379,31 @@ public class MapActivity extends Activity {
                     @Override
                     public void onConnected() {
                         Notify.showToast(R.string.connected);
+                        ledCentral.setColor(getColor(R.color.orange));
                     }
 
                     @Override
                     public void onSubscribed() {
                         Notify.showToast(R.string.subscribed);
+                        ledCentral.setColor(getColor(R.color.orange));
+                        JSONObject jsonObject = new JSONObject();
+                        try {
+                            jsonObject.put("action", "status");
+                            mainService.send(jsonObject.toString());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
-                if (Utils.hasInternetConnection()) mainService.connect();
-                else Notify.showToast(R.string.error_no_internet_connection);
+                if (Utils.hasInternetConnection()) {
+                    ledConnection.setColor(getColor(R.color.green));
+                    ledCentral.setColor(getColor(R.color.orange));
+                    mainService.connect();
+                } else {
+                    Notify.showToast(R.string.error_no_internet_connection);
+                    ledConnection.setColor(getColor(R.color.red));
+                    ledCentral.setColor(getColor(R.color.red));
+                }
             }
         });
         loadLastInformation();
@@ -438,9 +485,7 @@ public class MapActivity extends Activity {
         updateMarker();
     }
 
-    public void retrieveData(String data) throws JSONException {
-        Utils.vibrate(30);
-        JSONObject jsonObject = new JSONObject(data);
+    public void retrieveData(JSONObject jsonObject) throws JSONException {
         if (jsonObject.has("location")) {
             JSONObject jsonLocation = jsonObject.getJSONObject("location");
             LocationData locationData;
@@ -515,7 +560,7 @@ public class MapActivity extends Activity {
         Annotator annotator = new Annotator("LastInformation.json");
         if (!annotator.exists()) return;
         try {
-            retrieveData(annotator.getContent());
+            retrieveData(new JSONObject(annotator.getContent()));
             updateUi();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -542,9 +587,11 @@ public class MapActivity extends Activity {
             if (mainService.isMonitoring()) {
                 mainService.startForeground();
             } else {
+                ledCentral.setColor(getColor(R.color.red));
                 mainService.disconnect();
             }
         }
+        networkConnectionListener.stopListening();
     }
 
     @Override
@@ -556,9 +603,11 @@ public class MapActivity extends Activity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         if (mainService != null) {
             mainService.stopForeground();
+            ledCentral.setColor(getColor(R.color.orange));
             if (Utils.hasInternetConnection()) mainService.connect();
             else Notify.showToast(R.string.error_no_internet_connection);
         }
+        networkConnectionListener.startListening();
     }
 
     @Override
@@ -607,7 +656,6 @@ public class MapActivity extends Activity {
 
     private void updateMarker() {
         if (googleMap == null) return;
-        Utils.vibrate();
         if (information == null || information.getLocationData() == null) {
             return;
         }

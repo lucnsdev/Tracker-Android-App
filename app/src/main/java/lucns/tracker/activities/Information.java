@@ -33,6 +33,10 @@ public class Information {
         setStatus(status);
     }
 
+    public boolean hasValidLocation() {
+        return locationData != null && locationData.latitude != 0 && locationData.longitude != 0;
+    }
+
     public void setLocationData(LocationData locationData) {
         this.locationData = locationData;
     }
